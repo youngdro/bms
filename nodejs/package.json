@@ -1,0 +1,20 @@
+{
+  "name": "bms",
+  "version": "1.0.0",
+  "description": "图书管理系统",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "youngdro",
+  "license": "ISC",
+  "devDependencies": {
+    "alidayu-node": "^1.0.3",
+    "crypto": "0.0.3",
+    "formidable": "^1.0.17",
+    "fs": "0.0.1-security",
+    "mysql": "^2.11.1",
+    "orm": "^3.1.0",
+    "restify": "^4.1.1",
+  }
+}

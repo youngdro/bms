@@ -1,0 +1,206 @@
+body {
+  font-family: "Microsoft Yahei", Arial;
+  background: #f0f0f0 !important;
+}
+/*滚动条美化*/
+::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+}
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  border: 5px solid transparent;
+}
+::-webkit-scrollbar-track {
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2) inset;
+}
+::-webkit-scrollbar-thumb {
+  min-height: 20px;
+  background-clip: content-box;
+  box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.2) inset;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+.header {
+  position: relative;
+  background: #fff;
+  height: 150px;
+  width: 100%;
+  -webkit-box-shadow: 1px 1px 10px 2px #ccc;
+  -moz-box-shadow: 1px 1px 10px 2px #ccc;
+  -ms-box-shadow: 1px 1px 10px 2px #ccc;
+  -o-box-shadow: 1px 1px 10px 2px #ccc;
+  box-shadow: 1px 1px 10px 2px #ccc;
+}
+.header img.header-logo {
+  height: 100%;
+  position: absolute;
+  right: 0;
+}
+.container-fluid .admin-container {
+  margin-top: 20px;
+  min-height: 400px;
+}
+.container-fluid .admin-container .sidebar-container {
+  padding-right: 0;
+}
+@media screen and (max-width: 768px) {
+  .container-fluid .admin-container .sidebar-container {
+    padding-right: 15px;
+  }
+}
+.container-fluid .admin-container .sidebar-container .logout-mobile-box {
+  height: 50px;
+  width: 100%;
+}
+.container-fluid .admin-container .sidebar-container .logout-mobile-box a {
+  position: relative;
+  top: -10px;
+  display: block;
+  margin: 0 auto;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid #ddd;
+  line-height: 50px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+.container-fluid .admin-container .sidebar-container .sidebar {
+  background: #fff;
+  position: relative;
+  -webkit-box-shadow: 1px 1px 10px 1px #ddd;
+  -moz-box-shadow: 1px 1px 10px 1px #ddd;
+  -ms-box-shadow: 1px 1px 10px 1px #ddd;
+  -o-box-shadow: 1px 1px 10px 1px #ddd;
+  box-shadow: 1px 1px 10px 1px #ddd;
+}
+.container-fluid .admin-container .sidebar-container .sidebar .navbar {
+  font-size: 16px;
+  font-family: "Microsoft Yahei", Arial;
+}
+.container-fluid .admin-container .sidebar-container .sidebar .navbar i.fa {
+  margin-right: 5px;
+}
+.container-fluid .admin-container .sidebar-container .sidebar .navbar > ul > li {
+  border-bottom: 1px dashed #ddd;
+}
+.container-fluid .admin-container .sidebar-container .sidebar .navbar > ul > li:last-child {
+  border-bottom: 0;
+}
+.container-fluid .admin-container .sidebar-container .sidebar .logout-box {
+  position: absolute;
+  bottom: -90px;
+  width: 100%;
+  height: 50px;
+}
+.container-fluid .admin-container .sidebar-container .sidebar .logout-box .logout-btn {
+  display: block;
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  background: #fff;
+  margin: 0 auto;
+  line-height: 50px;
+  text-decoration: none;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  -webkit-transition: 0.5s all ease;
+  -moz-transition: 0.5s all ease;
+  -ms-transition: 0.5s all ease;
+  -o-transition: 0.5s all ease;
+  transition: 0.5s all ease;
+  -webkit-box-shadow: 1px 1px 10px 1px #ddd;
+  -moz-box-shadow: 1px 1px 10px 1px #ddd;
+  -ms-box-shadow: 1px 1px 10px 1px #ddd;
+  -o-box-shadow: 1px 1px 10px 1px #ddd;
+  box-shadow: 1px 1px 10px 1px #ddd;
+}
+.container-fluid .admin-container .sidebar-container .sidebar .logout-box .logout-btn:hover {
+  -webkit-box-shadow: 1px 1px 10px 1px #aaa;
+  -moz-box-shadow: 1px 1px 10px 1px #aaa;
+  -ms-box-shadow: 1px 1px 10px 1px #aaa;
+  -o-box-shadow: 1px 1px 10px 1px #aaa;
+  box-shadow: 1px 1px 10px 1px #aaa;
+}
+.container-fluid .admin-container .sidebar-container .sidebar .logout-box .logout-btn:before {
+  content: '';
+  display: block;
+  position: absolute;
+  width: 1px;
+  height: 40px;
+  background: #bdb9b9;
+  left: 50%;
+  top: -40px;
+}
+.container-fluid .admin-container .page-container .page {
+  position: relative;
+  min-height: 400px;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  padding: 20px;
+  margin-bottom: 20px;
+  -webkit-box-shadow: 1px 1px 10px 1px #ddd;
+  -moz-box-shadow: 1px 1px 10px 1px #ddd;
+  -ms-box-shadow: 1px 1px 10px 1px #ddd;
+  -o-box-shadow: 1px 1px 10px 1px #ddd;
+  box-shadow: 1px 1px 10px 1px #ddd;
+}
+.container-fluid .admin-container .page-container .page #addBookPage {
+  margin-top: 10px;
+  padding: 0 20px;
+}
+#sureReturnDialog .modal-body p > span {
+  color: #337ab7;
+}
+.beauty-alert {
+  position: fixed;
+  z-index: 100;
+  min-height: 40px;
+  min-width: 200px;
+  background: rgba(46, 109, 164, 0.5);
+  border-radius: 5px;
+  top: 50%;
+  left: 50%;
+  padding: 0 10px;
+  margin-top: -20px;
+  margin-left: -100px;
+  text-align: center;
+  font-size: 18px;
+  line-height: 40px;
+  color: #fff;
+  font-family: "Microsoft Yahei";
+  -webkit-transition: 0.5s all ease;
+  -moz-transition: 0.5s all ease;
+  -ms-transition: 0.5s all ease;
+  -o-transition: 0.5s all ease;
+  transition: 0.5s all ease;
+}
+.alert-red {
+  background: rgba(200, 0, 0, 0.5);
+}
+.alert-black {
+  background: rgba(50, 50, 50, 0.5);
+}
+.modal {
+  font-family: "Microsoft Yahei", Arial;
+}
+.mt-10 {
+  margin-top: 10px;
+}
+.c-blue {
+  color: #337ab7;
+}
+.c-red {
+  color: #ff0000;
+}
+.w-full {
+  width: 100%;
+}
+.max-w500 {
+  max-width: 500px;
+}

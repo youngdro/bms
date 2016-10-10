@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图书管理员</title>
+    <link rel="stylesheet" type="text/css" href="./libs/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="./libs/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="./libs/css/font-awesome.min.css">
+    <script src="./libs/js/angular.min.js"></script>
+</head>
+
+<body ng-app="myApp" ng-controller="adminCtrl">
+    <div class="header">
+        <img src="./libs/img/header.jpg" class="header-logo">
+    </div>
+    <!-- 主容器 -->
+    <div class="container-fluid">
+        <div class="row admin-container">
+            <!-- 侧栏容器 -->
+            <div class="sidebar-container col-sm-2">
+                <!-- 侧栏 -->
+                <div class="sidebar">
+                    <div class="navbar" id="mycollapse">
+                        <ul class="nav nav-pills nav-stacked" role="tablist">
+                            <li>
+                                <a href="#second-level-1" class="second-level accordion-toggle" data-toggle="collapse" data-parent="#mycollapse" data-target="#second-level-1">
+                                    <i class="fa fa-book"></i>书籍管理
+                                </a>
+                                <ul class="nav collapse panel-body" id="second-level-1">
+                                    <li><a href="#checkBookPage" role="tab" data-toggle="tab"><i class="fa fa-bookmark"></i>查看书籍</a></li>
+                                    <li><a href="#addBookPage" role="tab" data-toggle="tab"><i class="fa fa-plus-square"></i>新增书籍</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#second-level-2" class="second-level accordion-toggle" data-toggle="collapse" data-parent="#mycollapse" data-target="#second-level-2">
+                                    <i class="fa fa-list"></i>记录管理
+                                </a>
+                                <ul class="nav collapse panel-body" id="second-level-2">
+                                    <li><a href="#applyReturnPage" role="tab" data-toggle="tab"><i class="fa fa-indent"></i>申还记录</a></li>
+                                    <li><a href="#borrowRecordPage" role="tab" data-toggle="tab"><i class="fa fa-file-text"></i>借阅记录</a></li>
+                                    <li><a href="#addRecordPage" role="tab" data-toggle="tab"><i class="fa fa-file-text"></i>添书记录</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#second-level-3" class="second-level accordion-toggle" data-toggle="collapse" data-parent="#mycollapse" data-target="#second-level-3">
+                                    <i class="fa fa-user"></i>账户管理
+                                </a>
+                                <ul class="nav collapse panel-body" id="second-level-3">
+                                    <li><a href="#readerManage" role="tab" data-toggle="tab"><i class="fa fa-group"></i>学员管理</a></li>
+                                    <li><a href="#adminManage" role="tab" data-toggle="tab"><i class="fa fa-graduation-cap"></i>管理员</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="logout-box hidden-xs">
+                        <a class="logout-btn text-center" ng-click="logOut()">注销</a>
+                    </div>
+                </div>
+                <div class="logout-mobile-box visible-xs">
+                    <a class="logout-btn text-center" ng-click="logOut()">注销</a>
+                </div>
+            </div>
+            <div class="page-container col-sm-10">
+                <div class="page tab-content">
+                    <!-- 图书借阅情况页面 -->
+                    <div class="tab-pane fade" id="borrowRecordPage" role="tabpanel">
+                        <div class="row">
+                            <p class="col-sm-3">
+                                <label>图书编号：</label>
+                                <input class="form-control" type="text" ng-model="record_filter_num">
+                            </p>
+                            <p class="col-sm-3">
+                                <label>图书名字：</label>
+                                <input class="form-control" type="text" ng-model="record_filter_name">
+                            </p>
+                            <p class="col-sm-3">
+                                <label>借阅时长：</label>
+                                <select class="form-control" ng-model="record_filter_length">
+                                    <option value="">全部</option>
+                                    <option value="15">15天</option>
+                                    <option value="30">30天</option>
+                                    <option value="60">60天</option>
+                                </select>
+                            </p>
+                            <p class="col-sm-3">
+                                <label>借阅状态：</label>
+                                <select class="form-control" ng-model="record_filter_status">
+                                    <option value="">全部</option>
+                                    <option value="借阅中">借阅中</option>
+                                    <option value="已归还">已归还</option>
+                                </select>
+                            </p>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <td>图书编号</td>
+                                        <td>图书名字</td>
+                                        <td>借阅学员</td>
+                                        <td>学员编号</td>
+                                        <td>起始日期</td>
+                                        <td>截止日期</td>
+                                        <td>借阅时长</td>
+                                        <td>借阅状态</td>
+                                        <td>归还日期</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="record in borrowRecord | filter:record_filter_num | filter:record_filter_name | filter:record_filter_length | filter:record_filter_status | orderBy:'borrow_starttime'" class="borrow-item">
+                                        <td class="item-borrow-number">{{record.borrow_number}}</td>
+                                        <td class="item-borrow-title">《{{record.borrow_title}}》</td>
+                                        <td class="item-borrow-user">{{record.borrow_user}}</td>
+                                        <td class="item-borrow-uid">{{record.borrow_uid}}</td>
+                                        <td class="item-borrow-starttime">{{record.borrow_starttime}}</td>
+                                        <td class="item-borrow-returnday">{{getReturnDay(record.borrow_starttime,record.borrow_length)}}</td>
+                                        <td class="item-borrow-length">{{record.borrow_length}}天</td>
+                                        <td class="item-borrow-status">{{record.borrow_status}}</td>
+                                        <td class="item-borrow-returntime">
+                                            <button class="btn btn-primary btn-sm" ng-if='record.borrow_returntime==""' ng-click="sureReturn($event)" data-toggle="modal" data-target="#sureReturnDialog">确认归还</button>
+                                            <!-- 当前时间达到或超过截止时间,而且状态为“借阅中”时显示“短信”按钮 -->
+                                            <button class="btn btn-warning btn-sm" ng-if="nowDate>=getReturnDay(record.borrow_starttime,record.borrow_length)&&record.borrow_status=='借阅中'" ng-click="sendMessage($event)">短信提醒</button>{{record.borrow_returntime}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- 查看书籍页面 -->
+                    <div class="tab-pane active ng-cloak" id="checkBookPage" role="tabpanel">
+                        <div class="row">
+                            <p class="col-sm-3">
+                                <label>图书分类：</label>
+                                <select class="form-control" ng-model="book_filter_category">
+                                    <option value="">全部</option>
+                                    <option value="文学">文学</option>
+                                    <option value="小说">小说</option>
+                                    <option value="历史">历史</option>
+                                    <option value="励志">励志</option>
+                                    <option value="科普">科普</option>
+                                </select>
+                            </p>
+                            <p class="col-sm-3">
+                                <label>图书编号：</label>
+                                <input class="form-control" type="text" ng-model="book_filter_num">
+                            </p>
+                            <p class="col-sm-3">
+                                <label>图书名字：</label>
+                                <input class="form-control" type="text" ng-model="book_filter_title">
+                            </p>
+                            <p class="col-sm-3">
+                                <label>图书作者：</label>
+                                <input class="form-control" type="text" ng-model="book_filter_author">
+                            </p>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <td>图书封面</td>
+                                        <td>图书编号</td>
+                                        <td>图书名字</td>
+                                        <td>图书作者</td>
+                                        <td>图书分类</td>
+                                        <td>出版社</td>
+                                        <td>库存量</td>
+                                        <td>操作</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="record in bookData | filter:book_filter_category | filter:book_filter_num | filter:book_filter_title | filter:book_filter_author | orderBy:'book_filter_num'">
+                                        <td class="item-book-img">
+                                            <img src="{{record.book_img}}" style="height: 50px;">
+                                        </td>
+                                        <td class="item-book-number">{{record.book_number}}</td>
+                                        <td class="item-book-title">《{{record.book_title}}》</td>
+                                        <td class="item-book-author">{{record.book_author}}</td>
+                                        <td class="item-book-category">{{record.book_category}}</td>
+                                        <td class="item-book-publisher">{{record.book_publisher}}</td>
+                                        <td class="item-book-count">{{record.book_count}}</td>
+                                        <td class="item-book-returntime">
+                                            <button class="btn btn-primary btn-sm" ng-click="changeBookInfo($event)" data-toggle="modal" data-target="">修改</button>
+                                            <button class="btn btn-danger btn-sm" ng-click="deleteBookInfo($event)" data-toggle="modal" data-target="">删除</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- 新增书籍页面 -->
+                    <div class="tab-pane fade" id="addBookPage" role="tabpanel">
+                        <form class="form-horizontal" role="form" id="add_form" name="add_form" method="post" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-addon"><i class="c-red">* </i>图书编号</div>
+                                    <input type="text" class="form-control" name="add_book_number" id="add_book_number" ng-model="add_book_number" placeholder="图书编号" required="required">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-addon"><i class="c-red">* </i>图书名字</div>
+                                    <input type="text" class="form-control" id="add_book_title" name="add_book_title" ng-model="add_book_title" placeholder="图书名字" required="required">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-addon"><i class="c-red">* </i>图书作者</div>
+                                    <input type="text" class="form-control" id="add_book_author" name="add_book_author" ng-model="add_book_author" placeholder="图书作者" required="required">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-addon"><i class="c-red">* </i>图书分类</div>
+                                    <select class="form-control" id="add_book_category" name="add_book_category" ng-model="add_book_category" placeholder="图书分类">
+                                        <option value="文学">文学</option>
+                                        <option value="小说">小说</option>
+                                        <option value="历史">历史</option>
+                                        <option value="励志">励志</option>
+                                        <option value="科普">科普</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-addon"><i class="c-red">* </i> 出版社 &nbsp;&nbsp;</div>
+                                    <input type="text" class="form-control" id="add_book_publisher" name="add_book_publisher" ng-model="add_book_publisher" placeholder="出版社" required="required">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-addon"><i class="c-red">* </i>库存数量</div>
+                                    <input type="number" class="form-control" id="add_book_count" name="add_book_count" ng-model="add_book_count" placeholder="库存数量" required="required">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-addon"><i class="c-red"> &nbsp;&nbsp;</i>封面图片</div>
+                                    <input type="file" id="add_book_img" name="add_book_img" ng-model="add_book_img" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-addon"><i class="c-red"> &nbsp;&nbsp;</i>图书简介</div>
+                                    <textarea class="form-control" id="add_book_content" name="add_book_content" ng-model="add_book_content" placeholder="图书简介"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group text-center">
+                                <button class="btn btn-primary add-book-btn" ng-click="addBook()">新增</button>
+                                <button type="reset" class="btn btn-default" ng-click="" id="add_reset">重置</button>
+                                <button class="btn btn-default hide add-back-btn" ng-click="cancelChange()">返回</button>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- 添书记录页面 -->
+                    <div class="tab-pane fade" id="addRecordPage" role="tabpanel">
+                        <div class="row">
+                            <p class="col-sm-3">
+                                <label>图书分类：</label>
+                                <select class="form-control" ng-model="add_filter_category">
+                                    <option value="">全部</option>
+                                    <option value="文学">文学</option>
+                                    <option value="小说">小说</option>
+                                    <option value="历史">历史</option>
+                                    <option value="励志">励志</option>
+                                    <option value="科普">科普</option>
+                                </select>
+                            </p>
+                            <p class="col-sm-3">
+                                <label>图书编号：</label>
+                                <input class="form-control" type="text" ng-model="add_filter_num">
+                            </p>
+                            <p class="col-sm-3">
+                                <label>图书名字：</label>
+                                <input class="form-control" type="text" ng-model="add_filter_title">
+                            </p>
+                            <p class="col-sm-3">
+                                <label>图书作者：</label>
+                                <input class="form-control" type="text" ng-model="add_filter_author">
+                            </p>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <td>图书封面</td>
+                                        <td>图书编号</td>
+                                        <td>图书名字</td>
+                                        <td>图书分类</td>
+                                        <td>图书作者</td>
+                                        <td>添加时间</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="record in addBookRecord | filter:add_filter_category | filter:add_filter_num | filter:add_filter_title | filter:add_filter_author | orderBy:'book_addtime'">
+                                        <td class="item-book-img">
+                                            <img src="{{record.book_img}}" style="height: 50px;">
+                                        </td>
+                                        <td class="item-book-number">{{record.book_number}}</td>
+                                        <td class="item-book-title">《{{record.book_title}}》</td>
+                                        <td class="item-book-category">{{record.book_category}}</td>
+                                        <td class="item-book-author">{{record.book_author}}</td>
+                                        <td class="item-book-addtime">{{record.book_addtime}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- 申还记录页面 -->
+                    <div class="tab-pane fade" id="applyReturnPage" role="tabpanel">
+                        <div class="row">
+                            <p class="col-sm-3">
+                                <label>图书编号：</label>
+                                <input class="form-control" type="text" ng-model="apply_filter_num">
+                            </p>
+                            <p class="col-sm-3">
+                                <label>图书名字：</label>
+                                <input class="form-control" type="text" ng-model="apply_filter_title">
+                            </p>
+                            <p class="col-sm-3">
+                                <label>借阅时长：</label>
+                                <select class="form-control" ng-model="apply_filter_length">
+                                    <option value="">全部</option>
+                                    <option value="15">15天</option>
+                                    <option value="30">30天</option>
+                                    <option value="60">60天</option>
+                                </select>
+                            </p>
+                            <p class="col-sm-3">
+                                <label>借阅人：</label>
+                                <input class="form-control" type="text" ng-model="apply_filter_name">
+                            </p>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <td>图书编号</td>
+                                        <td>图书名字</td>
+                                        <td>学员编号</td>
+                                        <td>学员姓名</td>
+                                        <td>借阅日期</td>
+                                        <td>借阅时长</td>
+                                        <td>申还日期</td>
+                                        <td>操作</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="record in applyReturnData | filter:apply_filter_num | filter:apply_filter_name | filter:apply_filter_length | filter:apply_filter_title | orderBy:'apply_time'" class="apply-item">
+                                        <td class="item-borrow-number">{{record.borrow_number}}</td>
+                                        <td class="item-borrow-title">{{record.borrow_title}}</td>
+                                        <td class="item-borrow-user">{{record.name}}</td>
+                                        <td class="item-borrow-uid">{{record.uid}}</td>
+                                        <td class="item-borrow-starttime">{{record.borrow_starttime}}</td>
+                                        <td class="item-borrow-length">{{record.borrow_length}}天</td>
+                                        <td class="item-apply-time">{{record.apply_time}}</td>
+                                        <td class="item-return-operation">
+                                            <button class="btn btn-primary btn-sm" ng-click="sureReturn($event)" data-toggle="modal" data-target="#sureReturnDialog">确认归还</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="readerManage" role="tabpanel">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <td>学员编号</td>
+                                        <td>学员账号</td>
+                                        <td>学员姓名</td>
+                                        <td>联系方式</td>
+                                        <td>操作</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="record in allUserData" class="user-item">
+                                        <td class="item-user-uid">{{record.uid}}</td>
+                                        <td class="item-user-username">{{record.username}}</td>
+                                        <td class="item-user-name">{{record.name}}</td>
+                                        <td class="item-user-phone">{{record.phone}}</td>
+                                        <td class="item-user-operation">
+                                            <button class="btn btn-danger btn-sm" ng-click="userDelete($event)">删除</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="adminManage" role="tabpanel">
+                        <div class="form-group max-w500">
+                            <div class="input-group">
+                                <div class="input-group-addon">用户名</div>
+                                <input class="form-control" type="text" value="admin" readonly="readonly">
+                            </div>
+                        </div>
+                        <div class="form-group max-w500">
+                            <div class="input-group">
+                                <div class="input-group-addon">原密码</div>
+                                <input class="form-control" type="password" placeholder="原密码" name="oldPassord" ng-model="oldPassord" required="required">
+                            </div>
+                        </div>
+                        <div class="form-group max-w500">
+                            <div class="input-group">
+                                <div class="input-group-addon">新密码</div>
+                                <input class="form-control" type="password" placeholder="新密码" name="newPassword" ng-model="newPassword" required="required">
+                            </div>
+                        </div>
+                        <div class="form-group max-w500">
+                            <div class="input-group">
+                                <div class="input-group-addon">确认密码</div>
+                                <input class="form-control" type="password" placeholder="确认密码" name="confirmPassord" ng-model="confirmPassord" required="required">
+                            </div>
+                        </div>
+                        <div class="form-group max-w500">
+                            <button class="btn btn-primary" ng-click="changeAdminPassword()">修改密码</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 确认归还模态框 -->
+    <div class="modal fade" id="sureReturnDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">归还确认</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="hide">
+                        <input type="text" name="sureReturnBooknum" ng-model="sureReturnBooknum">
+                        <input type="text" name="sureReturnUid" ng-model="sureReturnUid">
+                    </div>
+                    <p>学员 <span>{{sureReturnUser}}</span> 于 <span>{{sureReturnStarttime}}</span> 借阅的书籍 <span>{{sureReturnBooktitle}}</span> 于今日 <span>{{sureReturnEndtime}}</span> 归还。</p>
+                    <p>管理员请核对信息无误后确认该学员已归还该书籍。</p>
+                </div>
+                <div class="modal-footer">
+                    <!-- <button onclick="javascript:$('#sureReturnDialog').modal('hide')">guan</button> -->
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" ng-click="sureReturnAgain()">确认归还</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./libs/js/jquery.min.js"></script>
+    <script src="./libs/js/bootstrap.min.js"></script>
+    <script src="./libs/js/common.js"></script>
+    <script src="./libs/js/admin.js"></script>
+    <script src="./libs/js/cookie.js"></script>
+    <script src="./libs/js/md5.js"></script>
+</body>
+
+</html>

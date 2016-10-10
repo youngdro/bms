@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学员图书借阅</title>
+    <link rel="stylesheet" type="text/css" href="./libs/css/reader.css">
+    <link rel="stylesheet" type="text/css" href="./libs/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="./libs/css/font-awesome.min.css">
+    <script src="./libs/js/angular.min.js"></script>
+</head>
+
+<body ng-app="myApp" ng-controller="readerCtrl">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12 sidebar cf">
+                <!-- 顶部栏logo图 -->
+                <img class="sidebar-bg hidden-xs" src="./libs/img/header.jpg">
+                <img class="sidebar-bg visible-xs" src="./libs/img/logo.png">
+                <div class="white-block"></div>
+                <ul class="nav nav-tabs user-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#book-borrow-box" role="tab" data-toggle="tab">图书浏览</a></li>
+                    <li role="presentation"><a href="#borrow-record-box" role="tab" data-toggle="tab">借阅记录</a></li>
+                    <li role="presentation"><a href="#user-info-box" role="tab" data-toggle="tab">学员资料</a></li>
+                </ul>
+                <p class="logout-p ng-cloak">欢迎你，{{name}}<a class="logout" ng-click="logOut()">注销</a></p>
+            </div>
+            <div class="col-sm-12 page ng-cloak tab-content">
+                <!-- ****************************************************************************** -->
+                <!-- 图书浏览窗口 -->
+                <div class="row tab-pane active fade in" id="book-borrow-box" role="tabpanel">
+                    <!-- 图书分类筛选 -->
+                    <div class="choose-category-box">
+                        <label>分类：</label>
+                        <span class="category-select"><input type="radio" name="filter_category" ng-model="filter_category" value="all" ng-click="filterCategory($event)">全部</span>
+                        <span><input type="radio" name="filter_category" ng-model="filter_category" value="literature" ng-click="filterCategory($event)">文学</span>
+                        <span><input type="radio" name="filter_category" ng-model="filter_category" value="novel" ng-click="filterCategory($event)">小说</span>
+                        <span><input type="radio" name="filter_category" ng-model="filter_category" value="history" ng-click="filterCategory($event)">历史</span>
+                        <span><input type="radio" name="filter_category" ng-model="filter_category" value="motivation" ng-click="filterCategory($event)">励志</span>
+                        <span><input type="radio" name="filter_category" ng-model="filter_category" value="science" ng-click="filterCategory($event)">科普</span>
+                    </div>
+                    <!-- 图书浏览 -->
+                    <div class="col-sm-3 book-item-box" ng-repeat="bookitem in bookData">
+                        <div class="book-item text-center">
+                            <div class="book-title overflow-ellipsis">{{bookitem.book_title}}</div>
+                            <img src="{{bookitem.book_img}}" title="《{{bookitem.book_title}}》详情" class="book-img" data-toggle="modal" data-target="#bookDetailsDialog" ng-click="bookDetails($event)">
+                            <i class="fa fa-chevron-right"></i>
+                            <div class="book-info overflow-ellipsis">
+                                <label>分类：</label><span class="book-category">{{bookitem.book_category}}</span>
+                                <br>
+                                <label>作者：</label><span class="book-author">{{bookitem.book_author}}</span>
+                                <span class="book-publisher hide">{{bookitem.book_publisher}}</span>
+                                <br>
+                                <label>编号：</label><span class="book-number">{{bookitem.book_number}}</span>
+                                <br>
+                                <label>库存：</label><span class="book-count">{{bookitem.book_count}}本</span>
+                                <div class="hide book-content">
+                                    {{bookitem.book_content}}
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-primary borrow-btn" data-toggle="modal" data-target="#bookBorrowDialog" ng-click="borrow($event)" ng-disabled="{{!bookitem.book_count}}">借阅</button>
+                        </div>
+                    </div>
+                    <div class="info-notify text-center ">
+                        此分类暂无图书
+                    </div>
+                </div>
+                <!-- ********************************************************************************* -->
+                <!-- 借阅记录tab页 -->
+                <div role="tabpanel" class="tab-pane fade" id="borrow-record-box">
+                    <div class="row">
+                        <p class="col-sm-3">
+                            <label>图书编号：</label>
+                            <input class="form-control" type="text" ng-model="record_filter_num">
+                        </p>
+                        <p class="col-sm-3">
+                            <label>图书名字：</label>
+                            <input class="form-control" type="text" ng-model="record_filter_name">
+                        </p>
+                        <p class="col-sm-3">
+                            <label>借阅时长：</label>
+                            <select class="form-control" ng-model="record_filter_length">
+                                <option value="">全部</option>
+                                <option value="15">15天</option>
+                                <option value="30">30天</option>
+                                <option value="60">60天</option>
+                            </select>
+                        </p>
+                        <p class="col-sm-3">
+                            <label>借阅状态：</label>
+                            <select class="form-control" ng-model="record_filter_status">
+                                <option value="">全部</option>
+                                <option value="借阅中">借阅中</option>
+                                <option value="已归还">已归还</option>
+                            </select>
+                        </p>
+                    </div>
+                    <!-- pc版的借阅记录显示 -->
+                    <div class="table-responsive hidden-xs">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <td>图书编号</td>
+                                    <td>图书名字</td>
+                                    <td>起始日期</td>
+                                    <td>截止日期</td>
+                                    <td>借阅时长</td>
+                                    <td>借阅状态</td>
+                                    <td>归还日期</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="record in borrowRecord | filter:record_filter_num | filter:record_filter_name | filter:record_filter_length | filter:record_filter_status | orderBy:'borrow_starttime'">
+                                    <td class="item-borrow-number">{{record.borrow_number}}</td>
+                                    <td class="item-borrow-title">《{{record.borrow_title}}》</td>
+                                    <td class="item-borrow-starttime">{{record.borrow_starttime}}</td>
+                                    <td>{{getReturnDay(record.borrow_starttime,record.borrow_length)}}</td>
+                                    <td class="item-borrow-length">{{record.borrow_length}}天</td>
+                                    <td class="item-borrow-status">{{record.borrow_status}}</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm" ng-if="!record.borrow_returntime" ng-click="applyReturn($event)">申请归还</button>{{record.borrow_returntime}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- 移动版的借阅记录显示 -->
+                    <div class="record-mobile row visible-xs">
+                        <div class="record-mobile-item col-sm-6" ng-repeat="record in borrowRecord | filter:record_filter_num | filter:record_filter_name | filter:record_filter_length | filter:record_filter_status | orderBy:'borrow_starttime'">
+                            <p class="mt-15"><span>{{record.borrow_number}}</span></p>
+                            <p><span>《{{record.borrow_title}}》</span></p>
+                            <p>
+                                <label>起始日期：</label><span>{{record.borrow_starttime}}</span></p>
+                            <p>
+                                <label>截止日期：</label><span>{{getReturnDay(record.borrow_starttime,record.borrow_length)}}</span></p>
+                            <p>
+                                <label>借阅时长：</label><span>{{record.borrow_length}}天</span></p>
+                            <p ng-show="{{!!record.borrow_returntime}}">
+                                <label>归还日期：</label><span>{{record.borrow_returntime}}</span></p>
+                            <div class="mobile-borrow-status-box text-center {{record.borrow_status=='已归还'}}">{{record.borrow_status}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="user-info-box">
+                    <div class="user-info-panel">
+                        <p>
+                            <label>学员编号：</label>{{uid}}</p>
+                        <p>
+                            <label>学员姓名：</label>{{name}}</p>
+                        <p>
+                            <label>联系方式：</label>{{phone}}</p>
+                        <p>
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#passwordDialog"><span class="fa fa-pencil-square-o"></span> 修改密码</button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <!-- page end -->
+        </div>
+    </div>
+    <!-- container-fluid end -->
+    <div class="modal fade" id="bookDetailsDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="book_details_title">《{{book_title}}》</h4>
+                </div>
+                <div class="modal-body row">
+                    <div class="col-sm-4">
+                        <img src={{book_img}} class="book-info-img">
+                    </div>
+                    <div class="col-sm-8">
+                        <label>分类：</label><span>{{book_category}}</span>
+                        <br>
+                        <label>作者：</label><span>{{book_author}}</span>
+                        <br>
+                        <label>出版社：</label><span>{{book_publisher}}</span>
+                        <br>
+                        <label>编号：</label><span>{{book_number}}</span>
+                        <br>
+                        <label>库存：</label><span>{{book_count}}</span>
+                        <br>
+                        <label>详情：</label>
+                    </div>
+                    <div class="book-details-content">
+                        {{book_content}}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 图书借阅信息填写模态框 -->
+    <div class="modal fade" id="bookBorrowDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">图书借阅</h4>
+                </div>
+                <div class="modal-body row">
+                    <div class="col-sm-6">
+                        <p>
+                            <label>图书名：&nbsp;&nbsp;&nbsp;</label><span>{{book_title}}</span></p>
+                        <p>
+                            <label>图书分类：</label><span>{{book_category}}</span></p>
+                        <p>
+                            <label>图书编号：</label><span>{{book_number}}</span></p>
+                    </div>
+                    <div class="col-sm-6">
+                        <span></span>
+                        <p>
+                            <label>借阅人：&nbsp;&nbsp;&nbsp;</label><span>{{name}}</span></p>
+                        <p>
+                            <label>学员编号：</label><span>{{uid}}</span></p>
+                        <p>
+                            <label>联系方式：</label><span>{{phone}}</span></p>
+                    </div>
+                    <div class="borrow-time-box">
+                        <p>
+                            <label>借阅时长：</label>
+                        </p>
+                        <span class="borrow1 borrow-time-choice selected{{borrowLength}}"><input type="radio" name="borrowLength" value="15" ng-model="borrowLength" ng-click="returnDayChange()">15天</span>
+                        <span class="borrow2 borrow-time-choice selected{{borrowLength}}"><input type="radio" name="borrowLength" value="30" ng-model="borrowLength" ng-click="returnDayChange()">30天</span>
+                        <span class="borrow3 borrow-time-choice selected{{borrowLength}}"><input type="radio" name="borrowLength" value="60" ng-model="borrowLength" ng-click="returnDayChange()">60天</span>
+                        <p class="borrow-notify">借阅时间为 <span>{{startDay}}</span> 至 <span>{{returnDay}}</span>。请按时归还，到期前一天会收到短信提示。</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" ng-click="toBorrow()">确认借阅</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 密码修改模态框 -->
+    <div class="modal fade" id="passwordDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">密码修改</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        <label>原密码：</label>
+                        <input class="form-control" type="password" name="oldPassord" ng-model="oldPassord" required="required">
+                    </p>
+                    <p>
+                        <label>新密码：</label>
+                        <input class="form-control" type="password" name="newPassword" ng-model="newPassword" required="required">
+                    </p>
+                    <p>
+                        <label>确认密码：</label>
+                        <input class="form-control" type="password" name="confirmPassord" ng-model="confirmPassord" required="required">
+                    </p>
+                    <p class="password-notify"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" ng-click="changePassword()">确认修改</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./libs/js/jquery.min.js"></script>
+    <script src="./libs/js/bootstrap.min.js"></script>
+    <script src="./libs/js/common.js"></script>
+    <script src="./libs/js/reader.js"></script>
+    <script src="./libs/js/cookie.js"></script>
+    <script src="./libs/js/md5.js"></script>
+</body>
+
+</html>

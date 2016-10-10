@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <title>图书管理系统</title>
+    <link rel="stylesheet" type="text/css" href="./web/libs/css/index.css">
+    <script src="./web/libs/js/angular.min.js"></script>
+</head>
+
+<body>
+    <div class="bg"></div>
+    <div class="container" ng-app="myApp" ng-controller="loginCtrl">
+        <div class="logbox">
+            <div class="choice">
+                <a class="choice-login to-{{which}}" ng-click="tologin()">登录</a>
+                <a class="choice-register to-{{which}}" ng-click="toregister()">注册</a>
+            </div>
+            <div class="choicebox to-{{which}}">
+                <div class="login">
+                    <form name="login_from">
+                        <div class="inputs user-inputs">
+                            <span class="user-icon"></span>
+                            <input name="username" type="text" id="username" value="" required="required" placeholder="用户名" ng-model="username"/>
+                        </div>
+                        <div class="inputs password-inputs">
+                            <span class="password-icon"></span>
+                            <input name="password" type="password" id="password" value="" required="required" placeholder="密码" ng-model="password"/>
+                        </div>
+                        <div class="inputs usertype-inputs">
+                            <span class="usertype-reader {{usertype}}"><input type="radio" name="usertype" value="reader" ng-model="usertype">学员</span>
+                            <span class="usertype-admin {{usertype}}"><input type="radio" name="usertype" value="admin" ng-model="usertype">管理员</span>
+                        </div>
+                        <button id="login_btn" value="login" ng-click="login()">登 录</button>
+                    </form>
+                </div>
+                <div class="register">
+                    <form name="register_from">
+                        <div class="inputs newuser-inputs">
+                            <span class="input-name">用户名</span><input name="new_username" type="text" id="new_username" required="required" ng-model="new_username"/><span class="input-notify"></span>
+                        </div>
+                        <div class="inputs newpassword-inputs">
+                            <span class="input-name">密码</span><input name="new_password" type="password" id="new_password" required="required" ng-model="new_password"/><span class="input-notify"></span>
+                        </div>
+                        <div class="inputs newpassword2-inputs">
+                            <span class="input-name">确认密码</span><input name="new_password2" type="password" id="new_password2" required="required" ng-model="new_password2"/><span class="input-notify"></span>
+                        </div>
+                        <div class="inputs name-inputs">
+                            <span class="input-name">姓名</span><input name="name" type="text" id="name" ng-model="name" required="required"/><span class="input-notify"></span>
+                        </div>
+                        <div class="inputs phone-inputs">
+                            <span class="input-name">手机</span><input name="phone" type="tel" id="phone" ng-model="phone" required="required"/><span class="input-notify"></span>
+                        </div>
+                        <button class="register_btn" ng-click="register()">注 册</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>  
+    <script src="./web/libs/js/jquery.min.js"></script>
+    <script src="./web/libs/js/index.js"></script>
+    <script src="./web/libs/js/cookie.js"></script> 
+    <script src="./web/libs/js/md5.js"></script> 
+</body>
+
+</html>
